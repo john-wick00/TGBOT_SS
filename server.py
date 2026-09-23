@@ -48,7 +48,7 @@ logging.basicConfig(level=logging.INFO)
 # --- Configuration --------------------------------------------------------
 API_ID = 20028561
 API_HASH = "0f3793daaf4d3905e55b0e44d8719cad"
-SESSION_STRING = "BQE8buMAkBu7Aibch2rJ7hez7mrbZk9821L-ZFaW7CZ9D67x26pmHDvmSmgmPWv0cXNB4sbYWbubzaQhUHOfGq2qIrGOF01IWMlxrXSQMUjut4JWyx4k3-iyk2CAUlHIeGNLuRmUUcO7nqoKmcMZgQ6MRO3Zqhnf1Bkpdnx-ZmORkkcRh-Ye9JZoUtZOHURsL_uOvEPbR3qcpMfmMg16mjugMsA-A9hhzFM5mcgH3YCdraCQaC7hFU-1sIgDNQz7Yn06IBlDzzH6vtemX4nNiXYgUGiZ3XppkEwJNkXlnDwaRagnD-mGZxMJoWRQxuVj5uBvF9QhHOAymAXNtRukHiCBCZX74wAAAAIF-NnCAA"
+SESSION_STRING = "BQE8buMAkHGEhGQFyb67SSAc3sfUkesCSkrDxafro6XtSUQS3CQPJ2yy7Ht2vysQhKcY7kmQpcCzknjUZlisbTqL8TxbprK-bvNm0UAgxFmWguh17fsENO7Sl2YtkI0oohe3s2noQFhIq6TEV9nZaNAEo9kaC23ytbqCRyavXcFh2M1yXAukLpEG2Ir2cIDWN5aqXq-lrI60UIRXLMSdluVnMuP9Fm5jz0G_iBf3DBsLTwLBg4K1pEzLP2rG6Xz0rkOVEbGJiabLZaEn1cFFp2PKqbFoCfuYLEfn0Sd7nqOq-eIL6rPMFNnA5JhYHVGoiYnMsxo2pSY0fevHJDS_KzSJXJI5kQAAAAHqxHBqAA"
 # --------------------------------------------------------------------------
 
 app = Flask(__name__)
