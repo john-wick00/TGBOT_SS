@@ -16,9 +16,10 @@
     --ink:#e8e9ef;
     --muted:#878c9c;
     --accent:#8054f2;
-    --glass:rgba(30,30,33,.72);
-    --glass-line:rgba(255,255,255,.07);
-    --glass-sh:0 1px 10px rgba(0,0,0,.3);
+    --glass:rgba(35,35,40,.85);
+    --glass-line:rgba(255,255,255,.14);
+    --glass-sh:0 4px 18px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.35);
+    --glass-blur:blur(18px);
     --av1:#ff8a5e;
     --av2:#f5514f;
     --in-bub:#2b2739;
@@ -78,31 +79,45 @@
   /* ================= phone ================= */
   .frame{border-radius:24px;overflow:hidden;box-shadow:0 26px 70px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.07)}
   .phone{
-    width:390px;min-height:802px;position:relative;overflow:hidden;background:#000;color:#fff;
+    width:390px;height:802px;position:relative;overflow:hidden;background:#000;color:#fff;
     display:flex;flex-direction:column;font-family:var(--tg-font);-webkit-font-smoothing:antialiased;
   }
   /* the wallpaper is a real <img> sized by script, so the saved PNG uses its full resolution */
   .wall{position:absolute;inset:0;overflow:hidden}
   .wall img{position:absolute;left:0;top:0;width:100%;max-width:none;display:block;user-select:none}
   .wall img:not([src]){display:none}
-  .topfade{position:absolute;top:0;left:0;right:0;height:155px;background:linear-gradient(180deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.4) 45%,rgba(0,0,0,0) 100%)}
+  /* Telegram's top edge: sits over the chat, so anything scrolled up under the header dims away.
+     Curve measured from a real iPhone screenshot. */
+  .topfade{position:absolute;z-index:3;top:0;left:0;right:0;height:90px;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.75) 0px,rgba(0,0,0,.73) 18px,rgba(0,0,0,.62) 30px,rgba(0,0,0,.5) 38px,rgba(0,0,0,.34) 45px,rgba(0,0,0,.2) 51px,rgba(0,0,0,.1) 58px,rgba(0,0,0,.04) 68px,rgba(0,0,0,0) 90px)}
   .botfade{position:absolute;bottom:0;left:0;right:0;height:130px;background:linear-gradient(0deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.28) 50%,rgba(0,0,0,0) 100%)}
   .ico{display:block;flex:none;user-select:none;pointer-events:none}
 
-  .head{position:relative;z-index:2;padding:11px 16px 4px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex:none}
-  .circ{width:36px;height:36px;border-radius:50%;background:var(--glass);border:.5px solid var(--glass-line);box-shadow:var(--glass-sh);display:flex;align-items:center;justify-content:center;flex:none}
-  .title{background:var(--glass);border:.5px solid var(--glass-line);box-shadow:var(--glass-sh);border-radius:18px;min-height:36px;padding:3px 16px;flex:0 1 auto;max-width:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.12;overflow:hidden}
+  .head{position:relative;z-index:4;padding:11px 16px 4px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex:none}
+  .circ{width:36px;height:36px;border-radius:50%;background:var(--glass);border:.5px solid var(--glass-line);box-shadow:var(--glass-sh);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);display:flex;align-items:center;justify-content:center;flex:none}
+  .title{background:var(--glass);border:.5px solid var(--glass-line);box-shadow:var(--glass-sh);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border-radius:18px;min-height:36px;padding:3px 16px;flex:0 1 auto;max-width:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.12;overflow:hidden}
   .title .nm{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:192px}
   .title .sb{font-size:11.5px;font-weight:400;color:#8d939f;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:192px}
   /* whole-pixel ring + absolutely placed picture = a true circle, no flat sides */
-  .pfp{position:relative;width:36px;height:36px;border-radius:50%;flex:none;background:var(--glass);border:.5px solid var(--glass-line);box-shadow:var(--glass-sh)}
+  .pfp{position:relative;width:36px;height:36px;border-radius:50%;flex:none;background:var(--glass);border:.5px solid var(--glass-line);box-shadow:var(--glass-sh);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur)}
   .pfp .av{position:absolute;left:3px;top:3px;width:29px;height:29px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center}
   .pfp img.av{display:block;object-fit:cover}
   .pfp .ltr{background:linear-gradient(160deg,var(--av1),var(--av2));font-size:14px;font-weight:600;line-height:1;color:#fff}
 
-  .chat{position:relative;z-index:2;flex:1 1 auto;display:flex;flex-direction:column;justify-content:flex-end;padding:18px 14px 10px;gap:8px}
+  /* fixed height: when there is more than fits, the top slides up under the header
+     and off the screen, like a real chat - the screenshot never gets taller */
+  .chat{position:relative;z-index:2;flex:1 1 0;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;padding:18px 14px 10px;gap:8px}
+  /* the "What can this bot do?" card Telegram shows when a bot chat is first opened */
+  /* sized from a real iPhone screenshot: hugs its text, left-aligned, no border,
+     and floats in the middle of the empty space above the messages.
+     Like Telegram, it may grow to the full width minus 10pt on each side. */
+  .descwrap{display:flex;justify-content:center;margin:auto -5px;padding-bottom:3px}
+  .botdesc{max-width:100%;background:rgba(39,29,39,.95);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border-radius:14px;padding:6px 13px 7.5px 11.5px;font-size:14px;line-height:1.42;text-align:left;word-wrap:break-word;font-family:var(--tg-font)}
+  .botdesc .bdh{font-weight:600}
+  .botdesc .bdb{white-space:pre-wrap}
+  /* in the description card Telegram underlines real links, but not emails, @names or #tags */
+  .botdesc .url{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:2px}
   .datewrap{display:flex;justify-content:center;margin-bottom:6px}
-  .date{background:var(--glass);border:.5px solid var(--glass-line);box-shadow:var(--glass-sh);border-radius:11px;padding:3px 8px;font-size:12px;line-height:15px;font-weight:500;white-space:nowrap}
+  .date{background:var(--glass);border:.5px solid var(--glass-line);box-shadow:var(--glass-sh);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);border-radius:11px;padding:3px 8px;font-size:12px;line-height:15px;font-weight:500;white-space:nowrap}
   .row{display:flex;width:100%}
   .row.out{justify-content:flex-end}
   .row.in{justify-content:flex-start}
@@ -119,7 +134,7 @@
   .tails .bub.out{border-bottom-right-radius:0}
   .tails .bub.in{border-bottom-left-radius:0}
   .cmd{text-decoration:underline;text-underline-offset:2px}
-  .lnk{color:#62a8ff}
+  .lnk{color:#5984de}
   .stamp{position:absolute;right:11px;bottom:5px;font-size:10px;color:rgba(255,255,255,.6);white-space:nowrap;display:inline-flex;align-items:center;gap:2px}
   .bub.out .stamp{color:rgba(255,255,255,.75)}
   .spacer{display:inline-block;width:60px;height:1px}
@@ -131,7 +146,7 @@
 
   .comp{position:relative;z-index:2;flex:none;display:flex;align-items:center;gap:8px;padding:0 25px 18px}
   .comp .circ{width:32px;height:32px}
-  .field{flex:1;min-width:0;height:32px;border-radius:16px;background:var(--glass);border:.5px solid var(--glass-line);box-shadow:var(--glass-sh);display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 7px 0 13px;color:#8d92a0;font-size:14.5px}
+  .field{flex:1;min-width:0;height:32px;border-radius:16px;background:var(--glass);border:.5px solid var(--glass-line);box-shadow:var(--glass-sh);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 7px 0 13px;color:#8d92a0;font-size:14.5px}
   .field span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .homebar{position:absolute;z-index:3;bottom:7px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:rgba(255,255,255,.42)}
   .emo{font-family:var(--tg-emoji);font-style:normal}
@@ -164,7 +179,7 @@
     <div class="actions">
       <label class="sr" for="fScale">Picture size</label>
       <select id="fScale">
-        <option value="4" selected>HD 4× (1560 px wide)</option>
+        <option value="5" selected>HD 5× (1950 px wide)</option>
         <option value="3">3× (1170 px, iPhone size)</option>
       </select>
       <button class="act" id="save" type="button">Save PNG</button>
@@ -189,6 +204,13 @@
         </div>
 
         <div class="chat">
+          <div class="descwrap" id="descWrap">
+            <div class="botdesc">
+              <div class="bdh">What can this bot do?</div>
+              <div class="bdb" id="pDesc"></div>
+            </div>
+          </div>
+
           <div class="datewrap" id="dateWrap"><div class="date" id="pDate">July 18</div></div>
 
           <div class="row out" id="outRow">
@@ -216,7 +238,7 @@
         <div class="homebar" id="pHome"></div>
       </div>
     </div>
-    <p class="note" id="sizeNote">Saved at 4× — 1560 × 3208 px</p>
+    <p class="note" id="sizeNote">Saved at 5× — 1950 × 4010 px</p>
   </div>
 
   <!-- ============ controls ============ -->
@@ -272,6 +294,11 @@
           <div class="swatches" id="avSw"></div>
         </div>
         <button class="ghost" id="clearPfp" type="button">Remove photo</button>
+        <div>
+          <label for="fDesc">Bot description</label>
+          <textarea id="fDesc" rows="3">I send secret whispers in any group chat.</textarea>
+        </div>
+        <label class="check"><input type="checkbox" id="fShowDesc" checked> Show bot description</label>
       </div>
     </details>
 
@@ -529,11 +556,51 @@ You can also use other methods — click the button below
   }
 
   function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-  function markup(s){
-    return emojify(flagify(esc(s)
+  /* Telegram marks links, emails, @usernames, #hashtags and /commands in bot texts on its own.
+     This scans the raw text, so nothing inside the added tags can be picked up by mistake. */
+  var TLDS = 'com|org|net|io|me|ru|app|dev|gg|xyz|co|in|info|tv|ly|ai|uk|us|de|fr|ua|by|kz|uz|id|br|cc|pro|site|online|store|shop|link|live|fun|club|top|biz|eu|ir|tr|es|it|pl|nl|jp|cn|kr|vn|ph|pk|bd|ng|ae|sa|news|tech|space|world|email|ton';
+  var ENTITY_RE = (function(){
+    var W = '[A-Za-z0-9_\\u00C0-\\u024F\\u0370-\\u03FF\\u0400-\\u04FF\\u0590-\\u06FF\\u0900-\\u0DFF]';
+    var L = '[A-Za-z_\\u00C0-\\u024F\\u0370-\\u03FF\\u0400-\\u04FF\\u0590-\\u06FF\\u0900-\\u0DFF]';
+    try { new RegExp('\\p{L}', 'u'); W = '[\\p{L}\\p{M}\\p{N}_]'; L = '[\\p{L}_]'; } catch(e){}
+    var src =
+      '([\\w.%+-]+@(?:[A-Za-z0-9-]+\\.)+[A-Za-z]{2,24})(?![\\w@-])' +                                   // 1 email
+      '|((?:https?:\\/\\/|www\\.)[^\\s<>"]+|(?:[A-Za-z0-9-]+\\.)+(?:' + TLDS + ')(?![\\w-])(?:\\/[^\\s<>"]*)?)' + // 2 link
+      '|(@[A-Za-z][A-Za-z0-9_]{2,31})(?![\\w@])' +                                                         // 3 @username
+      '|(#' + W + '*' + L + W + '*)' +                                                                     // 4 #hashtag
+      '|(\\/[A-Za-z0-9_]{1,32}(?:@[A-Za-z0-9_]+)?)(?![\\w\\/])';                                          // 5 /command
+    try { return new RegExp(src, 'giu'); } catch(e){ return new RegExp(src, 'gi'); }
+  })();
+  function count(str, ch){ return str.split(ch).length - 1; }
+  function autolink(raw){
+    var s = String(raw), out = '', last = 0, m;
+    ENTITY_RE.lastIndex = 0;
+    while((m = ENTITY_RE.exec(s))){
+      var t = m[0], i = m.index, prev = i ? s.charAt(i - 1) : '', ok = true, cls = 'lnk';
+      if(m[2]){
+        // a link never ends in punctuation (a closing bracket counts only if it has a partner)
+        while(t && /[.,!?:;'"*_\])»]$/.test(t)){
+          if(t.slice(-1) === ')' && count(t, '(') >= count(t, ')')) break;
+          t = t.slice(0, -1);
+        }
+        ok = !!t && !/[\w@.\/-]/.test(prev);
+        cls = 'lnk url';
+      } else if(m[3]){ ok = !/[\w@#\/.]/.test(prev); }
+      else if(m[4]){ ok = !/[\w@#\/&]/.test(prev); }
+      else if(m[5]){ ok = !/[\w\/@#.:]/.test(prev); }
+      if(!ok){ ENTITY_RE.lastIndex = i + 1; continue; }
+      out += esc(s.slice(last, i)) + '<span class="' + cls + '">' + esc(t) + '</span>';
+      last = i + t.length;
+      ENTITY_RE.lastIndex = last;
+    }
+    return out + esc(s.slice(last));
+  }
+  function markup(s, links){
+    var h = (links ? autolink(s) : esc(s))
       .replace(/\[([^\]]+)\]\(([^)]*)\)/g,'<span class="lnk">$1</span>')
       .replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>')
-      .replace(/__([^_]+)__/g,'<u>$1</u>')));
+      .replace(/__([^_]+)__/g,'<u>$1</u>');
+    return emojify(flagify(h));
   }
 
   function drawButtons(spec){
@@ -595,8 +662,32 @@ You can also use other methods — click the button below
   $('wallImg').addEventListener('load', layoutWall);
 
   function updateNote(){
-    var s = +$('fScale').value || 4, shot = $('shot');
+    var s = +$('fScale').value || 5, shot = $('shot');
     $('sizeNote').textContent = 'Saved at ' + s + '× — ' + (shot.offsetWidth * s) + ' × ' + (shot.offsetHeight * s) + ' px';
+  }
+
+  /* Telegram sizes the description card to its longest line, not to the width it wraps at,
+     so after wrapping the card shrinks back to hug the text */
+  function hugDesc(){
+    var wrap = $('descWrap'), box = wrap.querySelector('.botdesc');
+    box.style.width = '';
+    if(wrap.style.display === 'none') return;
+    var L = Infinity, R = -Infinity, range = document.createRange();
+    var walk = document.createTreeWalker(box, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT);
+    for(var n = walk.nextNode(); n; n = walk.nextNode()){
+      var rects;
+      if(n.nodeType === 3){ range.selectNodeContents(n); rects = range.getClientRects(); }
+      else if(n.tagName === 'IMG'){ rects = [n.getBoundingClientRect()]; }
+      else continue;
+      for(var i = 0; i < rects.length; i++){
+        if(rects[i].width < 0.5) continue;
+        L = Math.min(L, rects[i].left); R = Math.max(R, rects[i].right);
+      }
+    }
+    if(!(R > L)) return;
+    var cs = getComputedStyle(box);
+    var w = Math.ceil(R - L + parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight));
+    if(w < box.offsetWidth - 1) box.style.width = w + 'px';
   }
 
   function render(){
@@ -608,6 +699,10 @@ You can also use other methods — click the button below
     $('pDate').textContent = $('fDate').value;
     $('dateWrap').style.display = $('fDate').value.trim() ? 'flex' : 'none';
     $('pPlaceholder').textContent = $('fPlaceholder').value;
+
+    var desc = $('fDesc').value;
+    $('pDesc').innerHTML = markup(desc.trim(), true);
+    $('descWrap').style.display = ($('fShowDesc').checked && desc.trim()) ? 'flex' : 'none';
 
     var accent = $('fAccent').value;
     document.documentElement.style.setProperty('--accent', accent);
@@ -627,7 +722,7 @@ You can also use other methods — click the button below
     $('pOutTime').textContent = $('fOutTime').value;
     $('outRow').style.display = $('fShowOut').checked ? 'flex' : 'none';
 
-    $('pInText').innerHTML = markup($('fIn').value);
+    $('pInText').innerHTML = markup($('fIn').value, true);
     $('pInTime').textContent = $('fInTime').value;
 
     var mark = ($('fEmoji').value || '').trim(), av;
@@ -643,6 +738,7 @@ You can also use other methods — click the button below
     drawButtons($('fKb').value);
 
     requestAnimationFrame(function(){
+      hugDesc();
       $('outSpace').style.width = ($('outStamp').offsetWidth + 6) + 'px';
       $('inSpace').style.width = ($('pInTime').offsetWidth + 6) + 'px';
       layoutWall();
@@ -650,7 +746,7 @@ You can also use other methods — click the button below
     });
   }
 
-  ['fName','fSub','fEmoji','fOut','fOutTime','fIn','fInTime','fDate','fKb','fAccent','fPlaceholder','fHome','fFade','fShowOut','fTails'].forEach(function(id){
+  ['fName','fSub','fDesc','fShowDesc','fEmoji','fOut','fOutTime','fIn','fInTime','fDate','fKb','fAccent','fPlaceholder','fHome','fFade','fShowOut','fTails'].forEach(function(id){
     $(id).addEventListener('input', render);
     $(id).addEventListener('change', render);
   });
@@ -783,9 +879,9 @@ You can also use other methods — click the button below
   function toBlobUrl(canvas){
     return new Promise(function(res){
       if(canvas.toBlob){
-        canvas.toBlob(function(b){ res(b ? URL.createObjectURL(b) : canvas.toDataURL('image/png')); }, 'image/png');
+        canvas.toBlob(function(b){ res(b ? URL.createObjectURL(b) : canvas.toDataURL('image/png', 1)); }, 'image/png', 1);
       } else {
-        res(canvas.toDataURL('image/png'));
+        res(canvas.toDataURL('image/png', 1));
       }
     });
   }
@@ -808,7 +904,7 @@ You can also use other methods — click the button below
 
   $('save').addEventListener('click', function(){
     if(typeof html2canvas !== 'function'){ toast('The picture tool did not load. Reload the page.'); return; }
-    var btn = this, shot = $('shot'), scale = +$('fScale').value || 4;
+    var btn = this, shot = $('shot'), scale = +$('fScale').value || 5;
     btn.disabled = true; btn.textContent = 'Making picture…';
     layoutWall();
     var ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
@@ -885,8 +981,13 @@ You can also use other methods — click the button below
         var n = Number(d.mau);
         $('fSub').value = n > 0 ? n.toLocaleString() + ' monthly users' : 'bot';
       }
-      if(d.pfp){
+      if(typeof d.pfp === 'string'){
         pfpUrl = d.pfp;
+      }
+      // the "What can this bot do?" text; empty when the bot has none, which hides the card like Telegram
+      if(typeof d.description === 'string'){
+        $('fDesc').value = d.description;
+        if(d.description.trim()) $('fShowDesc').checked = true;
       }
       if(d.start_message){
         $('fIn').value = d.start_message;
@@ -910,6 +1011,8 @@ You can also use other methods — click the button below
   });
 
   render();
+  /* text widths change once the web font arrives, so size the card again then */
+  if(document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ render(); }); }
 })();
 </script>
 </body>

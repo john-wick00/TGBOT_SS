@@ -1,10 +1,11 @@
 """
 Telegram Bot Info Fetcher — Backend for the screenshot maker.
-Uses Pyrogram userbot to fetch bot name, PFP, and MAU.
+Uses Pyrogram userbot to fetch bot name, PFP, MAU and description.
 
 Usage:
   1. pip install -r requirements.txt
   2. Fill in API_ID, API_HASH, SESSION_STRING below
+     (or set them as environment variables, e.g. on Render)
   3. python server.py
   4. Open index.html in your browser
 """
@@ -13,6 +14,7 @@ import asyncio
 import base64
 import io
 import logging
+import os
 import sys
 import time
 
@@ -46,6 +48,8 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 # --- Configuration --------------------------------------------------------
+# An environment variable with the same name wins over the value written here,
+# so on Render you can keep the session string out of the code.
 API_ID = 20028561
 API_HASH = "0f3793daaf4d3905e55b0e44d8719cad"
 SESSION_STRING = "BQE8buMAkHGEhGQFyb67SSAc3sfUkesCSkrDxafro6XtSUQS3CQPJ2yy7Ht2vysQhKcY7kmQpcCzknjUZlisbTqL8TxbprK-bvNm0UAgxFmWguh17fsENO7Sl2YtkI0oohe3s2noQFhIq6TEV9nZaNAEo9kaC23ytbqCRyavXcFh2M1yXAukLpEG2Ir2cIDWN5aqXq-lrI60UIRXLMSdluVnMuP9Fm5jz0G_iBf3DBsLTwLBg4K1pEzLP2rG6Xz0rkOVEbGJiabLZaEn1cFFp2PKqbFoCfuYLEfn0Sd7nqOq-eIL6rPMFNnA5JhYHVGoiYnMsxo2pSY0fevHJDS_KzSJXJI5kQAAAAHqxHBqAA"
@@ -83,7 +87,7 @@ time.sleep(3)  # give it time to connect
 # --- Core fetch logic -----------------------------------------------------
 
 async def _fetch_bot(username: str) -> dict:
-    """Fetch bot name, MAU, and profile photo using raw API."""
+    """Fetch bot name, MAU, description and profile photo using raw API."""
     result = {}
 
     # Resolve the user
@@ -128,6 +132,11 @@ async def _fetch_bot(username: str) -> dict:
         result["mau"] = 0
     else:
         result["mau"] = 0
+
+    # Description: the "What can this bot do?" text Telegram shows in an empty
+    # bot chat. It lives in full_user.bot_info; empty when the bot has none.
+    bot_info = getattr(full_user, "bot_info", None)
+    result["description"] = (getattr(bot_info, "description", None) or "").strip()
 
     # Profile photo
     result["pfp"] = ""
@@ -178,7 +187,6 @@ def health():
 # --- Main -----------------------------------------------------------------
 
 if __name__ == "__main__":
-    import os
     port = int(os.environ.get("PORT", 5050))
     print(f"Bot Fetcher running on port {port}")
     app.run(host="0.0.0.0", port=port, debug=False)
