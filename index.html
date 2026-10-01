@@ -152,6 +152,53 @@
   .emo{font-family:var(--tg-emoji);font-style:normal}
   .flag{width:16.5px;height:11.25px;border-radius:1.5px;vertical-align:-1px;display:inline-block;margin:0 .5px}
 
+  /* ================= group chat =================
+     Sizes measured from a real iPhone screenshot of a group, scaled to this 390px phone. */
+  .phone.group{--glass:rgba(36,35,38,.93)}
+  .phone.group .head{padding:15px 13.6px 4px}
+  .phone.group .head .circ,.phone.group .head .pfp{width:39px;height:39px}
+  .phone.group .head .circ .ico{width:20px!important;height:20px!important;margin-left:-1.6px}
+  .phone.group .title{min-height:39px;min-width:158px;border-radius:19.5px}
+  .phone.group .title .nm{font-size:15.15px;font-weight:600}
+  .phone.group .title .sb{font-size:10.9px;color:#99999d}
+  .phone.group .pfp .av{left:2.5px;top:2.5px;width:33px;height:33px}
+  .phone.group .pfp .ltr{font-size:16px}
+  .phone.group .chat{padding-bottom:12.4px}
+  .phone.group .datewrap{margin-bottom:.5px}
+  .phone.group .date{background:#241b29;border:0;box-shadow:none;border-radius:10px;height:19.3px;padding:0 6.5px;font-size:11.45px;line-height:19.3px;font-weight:600}
+  /* the sender's photo sits left of the bubble, its bottom level with the bubble's */
+  .row.gin{align-items:flex-end;margin-left:-8.56px}
+  .row.gin .grp{max-width:298px}
+  .gav{width:29.8px;height:29.8px;margin:0 6.97px -.42px 0;border-radius:50%;overflow:hidden;flex:none;display:flex;align-items:center;justify-content:center}
+  .gav img{width:100%;height:100%;display:block;object-fit:cover;border-radius:50%}
+  .gav .gl{width:100%;height:100%;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,var(--av1),var(--av2));font-size:13px;font-weight:600;line-height:1;color:#fff}
+  .bub.gb{background:#302232;border-radius:14.5px;padding:4.3px 10px 5.77px 9px;font-size:16px;line-height:20.15px}
+  .gfrom{display:flex;align-items:baseline;height:16.1px;line-height:16.1px;white-space:nowrap}
+  .gname{flex:0 1 auto;min-width:0;margin-right:10px;overflow:hidden;text-overflow:ellipsis;font-size:12.6px;font-weight:600}
+  .gbadge{flex:none;margin:0 -5.2px 0 auto;height:15.3px;line-height:15.3px;padding:0 5.5px;border-radius:7.65px;background:rgba(40,184,100,.1);color:#70a070;font-size:11.05px;position:relative;top:.15px}
+  .bub.gb .stamp{right:10px;bottom:3.65px;line-height:12px;font-size:9.45px;color:rgba(255,255,255,.55)}
+  /* Telegram's newer tail: a small curl that hangs off the rounded bottom-left corner */
+  .tail.gt{left:-4.5px;width:13.5px;height:15px}
+  .lockbar{position:relative;z-index:2;flex:none;display:flex;justify-content:center;padding:0 14px 24.05px}
+  .lockbar span{display:block;max-width:100%;height:36px;line-height:34px;padding:0 11.5px;border-radius:18px;background:var(--glass);border:.5px solid var(--glass-line);box-shadow:var(--glass-sh);-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);color:#98989c;font-size:11.7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* The sizes above are for SF, Telegram's font on Apple devices. Elsewhere the phone falls back
+     to Inter, which is taller and wider at the same size, so these give the same letter heights
+     and line lengths as the real screenshot. */
+  .phone.group.nosf .title .nm{font-size:14.7px;letter-spacing:-.018em}
+  .phone.group.nosf .title .sb{font-size:10.5px}
+  .phone.group.nosf .date{font-size:11.1px;letter-spacing:-.042em}
+  .phone.group.nosf .bub.gb{font-size:15.45px;letter-spacing:-.053em}
+  .phone.group.nosf .gname{font-size:12.2px;letter-spacing:-.012em}
+  .phone.group.nosf .gbadge{font-size:10.7px;letter-spacing:.02em}
+  .phone.group.nosf .bub.gb .stamp{font-size:9.15px;letter-spacing:.043em}
+  .phone.group.nosf .lockbar span{font-size:11.35px}
+
+  /* bot / group switch above the controls */
+  .modes{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;margin-bottom:14px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+  .modes button{background:transparent;border:0;border-radius:9px;padding:9px 0;color:var(--muted);font:inherit;font-weight:600;font-size:13.5px;cursor:pointer}
+  .modes button[aria-pressed=true]{background:var(--accent);color:#fff}
+  body.is-group [data-only=bot],body:not(.is-group) [data-only=group]{display:none!important}
+
   .sheet{position:fixed;inset:0;background:rgba(4,5,8,.8);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
   .sheet[hidden]{display:none}
   .sheetbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;max-width:420px;width:100%;text-align:center;max-height:92vh;overflow:auto}
@@ -219,15 +266,22 @@
             </div>
           </div>
 
-          <div class="row in">
+          <div class="row in" id="inRow">
             <div class="grp">
               <div class="bub in"><span id="pInText"></span><span class="spacer" id="inSpace"></span><span class="stamp" id="pInTime">10:28 AM</span><img class="tail l" id="tailIn" alt=""></div>
               <div class="kb" id="pKb"></div>
             </div>
           </div>
+
+          <div class="row gin" id="gRow" style="display:none">
+            <div class="gav" id="gAv"></div>
+            <div class="grp">
+              <div class="bub gb"><div class="gfrom"><span class="gname" id="gNameEl">Crypto news</span><span class="gbadge" id="gBadgeEl">admin</span></div><span id="gText"></span><span class="spacer" id="gSpace"></span><span class="stamp" id="gTimeEl">7:51 AM</span><img class="tail gt" id="gTail" alt=""></div>
+            </div>
+          </div>
         </div>
 
-        <div class="comp">
+        <div class="comp" id="pComp">
           <div class="circ"><img class="ico" data-icon="clip" alt=""></div>
           <div class="field">
             <span id="pPlaceholder">Message</span>
@@ -235,6 +289,7 @@
           </div>
           <div class="circ"><img class="ico" data-icon="mic" alt=""></div>
         </div>
+        <div class="lockbar" id="pLock" style="display:none"><span id="pLockText">Sending messages is not allowed in this group.</span></div>
         <div class="homebar" id="pHome"></div>
       </div>
     </div>
@@ -243,6 +298,11 @@
 
   <!-- ============ controls ============ -->
   <div class="editor">
+    <div class="modes" role="group" aria-label="Chat type">
+      <button type="button" id="modeBot" aria-pressed="true">Bot</button>
+      <button type="button" id="modeGroup" aria-pressed="false">Group</button>
+    </div>
+
     <div class="notice" id="wallNotice" hidden>
       <p id="wallNoticeText">This copy has no wallpaper built in yet. Pick your old <b>index.html</b> (or any image) to bring it back.</p>
       <div class="rowbtns">
@@ -255,22 +315,22 @@
       <summary>Fetch from Telegram</summary>
       <div class="body">
         <div>
-          <label for="fBotLink">Bot username or link</label>
-          <input type="text" id="fBotLink" placeholder="@username or https://t.me/bot">
+          <label for="fBotLink" data-bot="Bot username or link" data-group="Group username or link">Bot username or link</label>
+          <input type="text" id="fBotLink" placeholder="@username or https://t.me/bot" data-bot-ph="@username or https://t.me/bot" data-group-ph="@group, https://t.me/group or an invite link">
         </div>
         <div style="display:flex;gap:8px;align-items:center">
-          <button class="act" id="fetchBot" type="button">Fetch Bot Info</button>
+          <button class="act" id="fetchBot" type="button" data-bot="Fetch Bot Info" data-group="Fetch Group Info">Fetch Bot Info</button>
           <span id="fetchStatus" style="font-size:12px;color:var(--muted)"></span>
         </div>
       </div>
     </details>
 
     <details class="group" open>
-      <summary>Bot</summary>
+      <summary data-bot="Bot" data-group="Group">Bot</summary>
       <div class="body">
         <div class="two">
           <div>
-            <label for="fName">Bot name</label>
+            <label for="fName" data-bot="Bot name" data-group="Group name">Bot name</label>
             <input type="text" id="fName" value="Whisper bot">
           </div>
           <div>
@@ -278,10 +338,11 @@
             <input type="text" id="fSub" value="581,749 monthly users">
           </div>
         </div>
-        <p class="hint">Write <b>bot</b> in the second box if you don't want a user count.</p>
+        <p class="hint" data-only="bot">Write <b>bot</b> in the second box if you don't want a user count.</p>
+        <p class="hint" data-only="group">Write it the way Telegram does, e.g. <b>1 member</b> or <b>2,345 members</b>.</p>
         <div class="two">
           <div>
-            <label for="fPfp">Bot photo</label>
+            <label for="fPfp" data-bot="Bot photo" data-group="Group photo">Bot photo</label>
             <input type="file" id="fPfp" accept="image/*">
           </div>
           <div>
@@ -294,15 +355,68 @@
           <div class="swatches" id="avSw"></div>
         </div>
         <button class="ghost" id="clearPfp" type="button">Remove photo</button>
-        <div>
+        <div data-only="bot">
           <label for="fDesc">Bot description</label>
           <textarea id="fDesc" rows="3">I send secret whispers in any group chat.</textarea>
         </div>
-        <label class="check"><input type="checkbox" id="fShowDesc" checked> Show bot description</label>
+        <label class="check" data-only="bot"><input type="checkbox" id="fShowDesc" checked> Show bot description</label>
       </div>
     </details>
 
-    <details class="group" open>
+    <details class="group" open data-only="group">
+      <summary>Group message</summary>
+      <div class="body">
+        <div class="two">
+          <div>
+            <label for="gFrom">Sender name</label>
+            <input type="text" id="gFrom" placeholder="same as the group">
+          </div>
+          <div>
+            <label for="gBadge">Tag after the name</label>
+            <input type="text" id="gBadge" value="admin" placeholder="no tag">
+          </div>
+        </div>
+        <p class="hint">Leave the sender name empty to post as the group itself, like an anonymous admin.</p>
+        <div>
+          <label>Sender name colour</label>
+          <div class="swatches" id="nameSw"></div>
+        </div>
+        <div class="two">
+          <div>
+            <label for="gFromPfp">Sender photo</label>
+            <input type="file" id="gFromPfp" accept="image/*">
+          </div>
+          <div style="align-self:end">
+            <button class="ghost" id="clearFromPfp" type="button">Remove sender photo</button>
+          </div>
+        </div>
+        <p class="hint">Without its own photo the sender shows the group photo, or a letter if you typed a name.</p>
+        <div>
+          <label for="gMsg">Message</label>
+          <textarea id="gMsg" rows="5">Hello
+Hi
+Crypto News Trends</textarea>
+          <p class="hint">Blue link: <b>[text](x)</b> · bold: <b>**text**</b> · underline: <b>__text__</b></p>
+        </div>
+        <div class="two">
+          <div>
+            <label for="gTime">Time</label>
+            <input type="text" id="gTime" value="7:51 AM">
+          </div>
+          <div>
+            <label for="gDate">Date bubble</label>
+            <input type="text" id="gDate" value="Today">
+          </div>
+        </div>
+        <label class="check"><input type="checkbox" id="gLocked" checked> Members can't send messages</label>
+        <div>
+          <label for="gLockedText">Bottom bar text</label>
+          <input type="text" id="gLockedText" value="Sending messages is not allowed in this group.">
+        </div>
+      </div>
+    </details>
+
+    <details class="group" open data-only="bot">
       <summary>Messages</summary>
       <div class="body">
         <label class="check"><input type="checkbox" id="fShowOut" checked> Show my message</label>
@@ -345,7 +459,7 @@ You can also use other methods — click the button below
       </div>
     </details>
 
-    <details class="group" open>
+    <details class="group" open data-only="bot">
       <summary>Buttons under the reply</summary>
       <div class="body">
         <div>
@@ -360,7 +474,7 @@ You can also use other methods — click the button below
       <summary>Look</summary>
       <div class="body">
         <div class="two">
-          <div>
+          <div data-only="bot">
             <label for="fAccent">My bubble colour</label>
             <input type="color" id="fAccent" value="#8054f2">
           </div>
@@ -437,9 +551,16 @@ You can also use other methods — click the button below
     ['#ff8a5e','#f5514f'], ['#ffcd6a','#ffa85c'], ['#82b1ff','#665fff'],
     ['#a0de7e','#54cb68'], ['#53edd6','#28c9b7'], ['#72d5fd','#2a9ef1'], ['#e0a2f3','#d669ed']
   ];
-  var IN_BUB = '#2b2739';
+  var IN_BUB = '#2b2739', G_BUB = '#302232';
   var avIndex = 0, pfpUrl = '', lastTail = '', lastAv = '';
+  /* group sender name colours, in the same order as the photo circle colours above */
+  var NAME_COLORS = ['#ff8b80','#ffaf5c','#bb9df5','#7fd081','#62d4e3','#6cb7f5','#f68ac4'];
+  var nameIndex = 2, fromPfpUrl = '', lastGav = '';
+  var API = 'https://tgbotss.onrender.com';
   var DEFAULT_WALL = $('wallImg').getAttribute('src') || '';
+  /* groups get their own built-in wallpaper: the same pattern in the colours of a real group
+     screenshot, already cropped to the phone, so it lines up exactly */
+  var GROUP_WALL = 'background-group.png';
 
   /* ---- icons: vector SVG images stored at 8x their size, so they stay sharp in the saved PNG ---- */
   var K = 8;
@@ -462,6 +583,15 @@ You can also use other methods — click the button below
     share:  { vb:'0 0 24 24', w:11, h:11,
               body:'<path d="M4 17.5 19.5 6M19.5 6h-7M19.5 6v7" ' + LINE + ' stroke="#fff" stroke-width="2.4"/>' }
   };
+  /* without SF on this device the phone is drawn in Inter; group mode then switches to sizes tuned for it */
+  (function(){
+    var c = document.createElement('canvas').getContext('2d'), t = 'Crypto News Trends';
+    c.font = '16px monospace';
+    var mono = c.measureText(t).width;
+    c.font = '16px -apple-system, BlinkMacSystemFont, "SF Pro Text", monospace';
+    if(Math.abs(c.measureText(t).width - mono) < 0.5) $('shot').classList.add('nosf');
+  })();
+
   var ICON_SRC = {};
   Object.keys(ICONS).forEach(function(k){ ICON_SRC[k] = svgSrc(ICONS[k].vb, ICONS[k].w, ICONS[k].h, ICONS[k].body); });
   Array.prototype.forEach.call(document.querySelectorAll('img[data-icon]'), function(el){
@@ -485,6 +615,9 @@ You can also use other methods — click the button below
     return 'rgb(' + Math.round((n>>16&255)*f) + ',' + Math.round((n>>8&255)*f) + ',' + Math.round((n&255)*f) + ')';
   }
   $('tailIn').src = tailSrc('l', IN_BUB);
+  /* the group bubble keeps its rounded corner; this curl hangs off it (origin = bubble's bottom-left) */
+  $('gTail').src = svgSrc('-4.5 -15 13.5 15', 13.5, 15,
+    '<path d="M0 -15V-7C-.6 -3.6 -2.2 -.8 -4.2 0H-2C.5 0 3 -1.1 5.8 -2.7L8 -6V-15Z" fill="' + G_BUB + '"/>');
 
   /* ---- flags drawn as tiny SVGs, so they appear on every device ---- */
   function hb(c){ var h=15/c.length,o=''; c.forEach(function(x,i){ o+='<rect width="22" height="'+(h+0.02).toFixed(2)+'" y="'+(i*h).toFixed(2)+'" fill="'+x+'"/>'; }); return o; }
@@ -624,6 +757,11 @@ You can also use other methods — click the button below
     });
   }
 
+  function pressOnly(box, i){
+    Array.prototype.forEach.call(box.children, function(el, j){
+      el.setAttribute('aria-pressed', j === i ? 'true' : 'false');
+    });
+  }
   function buildSwatches(){
     var box = $('avSw');
     AVATARS.forEach(function(pair, i){
@@ -631,16 +769,29 @@ You can also use other methods — click the button below
       b.type = 'button';
       b.className = 'sw';
       b.style.background = 'linear-gradient(160deg,' + pair[0] + ',' + pair[1] + ')';
-      b.setAttribute('aria-pressed', i === 0 ? 'true' : 'false');
+      b.setAttribute('aria-pressed', i === avIndex ? 'true' : 'false');
       b.setAttribute('aria-label', 'Colour ' + (i+1));
       b.addEventListener('click', function(){
         avIndex = i;
-        Array.prototype.forEach.call(box.children, function(el, j){
-          el.setAttribute('aria-pressed', j === i ? 'true' : 'false');
-        });
+        pressOnly(box, i);
         render();
       });
       box.appendChild(b);
+    });
+    var nbox = $('nameSw');
+    NAME_COLORS.forEach(function(c, i){
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'sw';
+      b.style.background = c;
+      b.setAttribute('aria-pressed', i === nameIndex ? 'true' : 'false');
+      b.setAttribute('aria-label', 'Name colour ' + (i+1));
+      b.addEventListener('click', function(){
+        nameIndex = i;
+        pressOnly(nbox, i);
+        render();
+      });
+      nbox.appendChild(b);
     });
   }
 
@@ -690,19 +841,37 @@ You can also use other methods — click the button below
     if(w < box.offsetWidth - 1) box.style.width = w + 'px';
   }
 
-  function render(){
-    var shot = $('shot');
-    var name = $('fName').value || 'bot';
-    $('pName').textContent = name;
-    $('pSub').textContent = $('fSub').value || 'bot';
+  /* the little photo beside a group message: its own photo, else the group's when the
+     group itself posts, else the first letter of the typed sender name */
+  function senderAvatar(name){
+    var from = $('gFrom').value.trim();
+    if(fromPfpUrl) return '<img alt="" src="' + fromPfpUrl + '">';
+    if(!from){
+      if(pfpUrl) return '<img alt="" src="' + pfpUrl + '">';
+      var mark = ($('fEmoji').value || '').trim();
+      if(mark && isEmoji(mark)) return '<span class="gl"><span class="emo">' + esc(mark) + '</span></span>';
+      return '<span class="gl">' + esc(mark ? mark.slice(0,2) : (name.trim().charAt(0).toUpperCase() || 'G')) + '</span>';
+    }
+    var pair = AVATARS[nameIndex];
+    return '<span class="gl" style="background:linear-gradient(160deg,' + pair[0] + ',' + pair[1] + ')">' + esc(Array.from(from)[0].toUpperCase()) + '</span>';
+  }
 
-    $('pDate').textContent = $('fDate').value;
-    $('dateWrap').style.display = $('fDate').value.trim() ? 'flex' : 'none';
+  function render(){
+    var shot = $('shot'), group = mode === 'group';
+    var name = $('fName').value || (group ? 'Group' : 'bot');
+    $('pName').textContent = name;
+    var sub = $('fSub').value || (group ? '' : 'bot');
+    $('pSub').textContent = sub;
+    $('pSub').style.display = sub ? '' : 'none';
+
+    var date = $(group ? 'gDate' : 'fDate').value;
+    $('pDate').textContent = date;
+    $('dateWrap').style.display = date.trim() ? 'flex' : 'none';
     $('pPlaceholder').textContent = $('fPlaceholder').value;
 
     var desc = $('fDesc').value;
     $('pDesc').innerHTML = markup(desc.trim(), true);
-    $('descWrap').style.display = ($('fShowDesc').checked && desc.trim()) ? 'flex' : 'none';
+    $('descWrap').style.display = (!group && $('fShowDesc').checked && desc.trim()) ? 'flex' : 'none';
 
     var accent = $('fAccent').value;
     document.documentElement.style.setProperty('--accent', accent);
@@ -720,7 +889,15 @@ You can also use other methods — click the button below
     var out = $('fOut').value;
     $('pOutText').innerHTML = /^\//.test(out.trim()) ? '<span class="cmd">' + esc(out) + '</span>' : markup(out);
     $('pOutTime').textContent = $('fOutTime').value;
-    $('outRow').style.display = $('fShowOut').checked ? 'flex' : 'none';
+    $('outRow').style.display = (!group && $('fShowOut').checked) ? 'flex' : 'none';
+    $('inRow').style.display = group ? 'none' : 'flex';
+    $('gRow').style.display = group ? 'flex' : 'none';
+
+    /* a group where members can't write shows a notice instead of the text box */
+    var locked = group && $('gLocked').checked;
+    $('pComp').style.display = locked ? 'none' : 'flex';
+    $('pLock').style.display = locked ? 'flex' : 'none';
+    $('pLockText').textContent = $('gLockedText').value;
 
     $('pInText').innerHTML = markup($('fIn').value, true);
     $('pInTime').textContent = $('fInTime').value;
@@ -737,16 +914,30 @@ You can also use other methods — click the button below
 
     drawButtons($('fKb').value);
 
+    if(group){
+      var from = $('gFrom').value.trim(), badge = $('gBadge').value.trim();
+      $('gNameEl').textContent = from || name;
+      $('gNameEl').style.color = NAME_COLORS[nameIndex];
+      $('gBadgeEl').textContent = badge;
+      $('gBadgeEl').style.display = badge ? '' : 'none';
+      $('gText').innerHTML = markup($('gMsg').value, true);
+      $('gTimeEl').textContent = $('gTime').value;
+      var gav = senderAvatar(name);
+      if(gav !== lastGav){ lastGav = gav; $('gAv').innerHTML = gav; }
+    }
+
     requestAnimationFrame(function(){
       hugDesc();
       $('outSpace').style.width = ($('outStamp').offsetWidth + 6) + 'px';
       $('inSpace').style.width = ($('pInTime').offsetWidth + 6) + 'px';
+      $('gSpace').style.width = ($('gTimeEl').offsetWidth + 6) + 'px';
       layoutWall();
       updateNote();
     });
   }
 
-  ['fName','fSub','fDesc','fShowDesc','fEmoji','fOut','fOutTime','fIn','fInTime','fDate','fKb','fAccent','fPlaceholder','fHome','fFade','fShowOut','fTails'].forEach(function(id){
+  ['fName','fSub','fDesc','fShowDesc','fEmoji','fOut','fOutTime','fIn','fInTime','fDate','fKb','fAccent','fPlaceholder','fHome','fFade','fShowOut','fTails',
+   'gFrom','gBadge','gMsg','gTime','gDate','gLocked','gLockedText'].forEach(function(id){
     $(id).addEventListener('input', render);
     $(id).addEventListener('change', render);
   });
@@ -779,17 +970,70 @@ You can also use other methods — click the button below
   $('clearPfp').addEventListener('click', function(){
     pfpUrl = ''; $('fPfp').value = ''; render();
   });
+  $('gFromPfp').addEventListener('change', function(e){
+    var f = e.target.files && e.target.files[0]; if(!f) return;
+    var r = new FileReader();
+    r.onload = function(ev){ squareCrop(ev.target.result, 512, function(url){ fromPfpUrl = url; render(); }); };
+    r.readAsDataURL(f);
+  });
+  $('clearFromPfp').addEventListener('click', function(){
+    fromPfpUrl = ''; $('gFromPfp').value = ''; render();
+  });
+
+  /* ---- bot / group mode: the header boxes are shared, but each mode keeps its own values ---- */
+  var mode = 'bot';
+  var MODE_KEYS = ['fBotLink','fName','fSub','fEmoji'];
+  var saved = {
+    group: { fBotLink:'', fName:'Crypto news', fSub:'1 member', fEmoji:'', fHome:false, pfpUrl:'', avIndex:2 }
+  };
+  function setMode(m){
+    if(m === mode) return;
+    var s = { fHome:$('fHome').checked, pfpUrl:pfpUrl, avIndex:avIndex };
+    MODE_KEYS.forEach(function(id){ s[id] = $(id).value; });
+    saved[mode] = s;
+    mode = m;
+    s = saved[m];
+    MODE_KEYS.forEach(function(id){ $(id).value = s[id]; });
+    $('fHome').checked = s.fHome;
+    pfpUrl = s.pfpUrl; $('fPfp').value = '';
+    avIndex = s.avIndex; pressOnly($('avSw'), avIndex);
+    $('fetchStatus').textContent = '';
+
+    var group = m === 'group';
+    document.body.classList.toggle('is-group', group);
+    $('shot').classList.toggle('group', group);
+    $('modeBot').setAttribute('aria-pressed', group ? 'false' : 'true');
+    $('modeGroup').setAttribute('aria-pressed', group ? 'true' : 'false');
+    Array.prototype.forEach.call(document.querySelectorAll('[data-bot]'), function(el){
+      el.textContent = el.getAttribute(group ? 'data-group' : 'data-bot');
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-bot-ph]'), function(el){
+      el.placeholder = el.getAttribute(group ? 'data-group-ph' : 'data-bot-ph');
+    });
+    // swap built-in wallpapers, but keep one the user picked
+    var cur = $('wallImg').getAttribute('src') || '';
+    if(cur === DEFAULT_WALL || cur === GROUP_WALL) setWall(builtInWall());
+    try { localStorage.setItem('tgss-mode', m); } catch(e){}
+    render();
+  }
+  $('modeBot').addEventListener('click', function(){ setMode('bot'); });
+  $('modeGroup').addEventListener('click', function(){ setMode('group'); });
 
   /* ---- wallpaper picking, and building it into a fresh index.html ---- */
+  function builtInWall(){ return mode === 'group' ? GROUP_WALL : DEFAULT_WALL; }
   function setWall(src){
-    $('wallImg').src = src;
+    if(src) $('wallImg').src = src; else $('wallImg').removeAttribute('src');
     updateWallUi();
   }
+  /* a copy of the page without the group wallpaper next to it falls back to the normal one */
+  $('wallImg').addEventListener('error', function(){
+    if(this.getAttribute('src') === GROUP_WALL) setWall(DEFAULT_WALL);
+  });
   function updateWallUi(){
     var cur = $('wallImg').getAttribute('src') || '';
-    var custom = !!cur && cur !== DEFAULT_WALL;
+    var custom = !!cur && cur !== DEFAULT_WALL && cur !== GROUP_WALL;
     $('keepWall').hidden = !custom;
-    $('resetWall').hidden = !(DEFAULT_WALL && custom);
+    $('resetWall').hidden = !(builtInWall() && custom);
     $('wallNotice').hidden = !!DEFAULT_WALL;
     if(!DEFAULT_WALL){
       $('wallNoticeText').innerHTML = cur
@@ -821,7 +1065,7 @@ You can also use other methods — click the button below
     e.target.value = '';
   });
   $('pickWall').addEventListener('click', function(){ $('fWallFile').click(); });
-  $('resetWall').addEventListener('click', function(){ setWall(DEFAULT_WALL); });
+  $('resetWall').addEventListener('click', function(){ setWall(builtInWall()); });
 
   function downloadPage(){
     var src = $('wallImg').getAttribute('src');
@@ -952,11 +1196,58 @@ You can also use other methods — click the button below
     $('fInTime').value = fmt12(reply);
     $('fDate').value = 'Today';
     $('fKb').value = '';
+    $('gTime').value = fmt12(ist);
   })();
+
+  /* ---- Fetch group info from backend ---- */
+  function fetchGroup(raw){
+    var st = $('fetchStatus'), btn = $('fetchBot');
+    if(!raw){ st.textContent = 'Enter a group username or link.'; return; }
+    // invite links are sent whole, anything else is cut down to the username
+    var inv = /t(?:elegram)?\.(?:me|dog)\/(?:\+|joinchat\/)([\w-]+)/i.exec(raw);
+    var link = inv ? 'https://t.me/+' + inv[1]
+      : raw.replace(/^https?:\/\/(t\.me|telegram\.me|telegram\.dog)\//i, '').replace(/^@/, '').replace(/[\?#\/].*/,'').trim();
+    if(!link){ st.textContent = 'Could not read the group link.'; return; }
+
+    function fail(msg){ st.textContent = '❌ ' + msg; st.style.color = '#f55'; btn.disabled = false; }
+    btn.disabled = true;
+    st.textContent = 'Fetching…';
+    st.style.color = 'var(--muted)';
+
+    fetch(API + '/fetch_group', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ link: link })
+    })
+    .then(function(r){
+      if(r.status === 404) throw new Error('old server');
+      return r.json();
+    })
+    .then(function(d){
+      if(mode !== 'group'){ btn.disabled = false; st.textContent = ''; return; }
+      if(d.error){ fail(d.error); return; }
+
+      if(d.name) $('fName').value = d.name;
+      var n = Number(d.members) || 0;
+      if(n > 0) $('fSub').value = n.toLocaleString('en-US') + ' ' + (d.kind === 'channel' ? 'subscriber' : 'member') + (n === 1 ? '' : 's');
+      if(typeof d.pfp === 'string') pfpUrl = d.pfp;
+
+      render();
+      st.textContent = '✅ Done!';
+      st.style.color = '#5f5';
+      btn.disabled = false;
+    })
+    .catch(function(err){
+      fail(err && err.message === 'old server'
+        ? 'The server runs an old server.py. Deploy the new one.'
+        : 'Server error. Is server.py running?');
+    });
+  }
 
   /* ---- Fetch bot info from backend ---- */
   $('fetchBot').addEventListener('click', function(){
     var raw = $('fBotLink').value.trim();
+    if(mode === 'group'){ fetchGroup(raw); return; }
     if(!raw){ $('fetchStatus').textContent = 'Enter a bot username or link.'; return; }
     // extract username from various formats
     var username = raw.replace(/^https?:\/\/(t\.me|telegram\.me|telegram\.dog)\//i, '').replace(/^@/, '').replace(/[\?#\/].*/,'').trim();
@@ -967,13 +1258,14 @@ You can also use other methods — click the button below
     $('fetchStatus').textContent = 'Fetching…';
     $('fetchStatus').style.color = 'var(--muted)';
 
-    fetch('https://tgbotss.onrender.com/fetch', {
+    fetch(API + '/fetch', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username: username })
     })
     .then(function(r){ return r.json(); })
     .then(function(d){
+      if(mode !== 'bot'){ btn.disabled = false; $('fetchStatus').textContent = ''; return; }
       if(d.error){ $('fetchStatus').textContent = '❌ ' + d.error; $('fetchStatus').style.color = '#f55'; btn.disabled = false; return; }
 
       if(d.name) $('fName').value = d.name;
@@ -1011,6 +1303,7 @@ You can also use other methods — click the button below
   });
 
   render();
+  try { if(localStorage.getItem('tgss-mode') === 'group') setMode('group'); } catch(e){}
   /* text widths change once the web font arrives, so size the card again then */
   if(document.fonts && document.fonts.ready){ document.fonts.ready.then(function(){ render(); }); }
 })();

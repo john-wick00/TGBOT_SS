@@ -1,6 +1,7 @@
 """
 Telegram Bot Info Fetcher — Backend for the screenshot maker.
-Uses Pyrogram userbot to fetch bot name, PFP, MAU and description.
+Uses Pyrogram userbot to fetch bot name, PFP, MAU and description,
+and a group's title, photo and member count.
 
 Usage:
   1. pip install -r requirements.txt
@@ -160,6 +161,47 @@ async def _fetch_bot(username: str) -> dict:
     return result
 
 
+async def _fetch_group(link: str) -> dict:
+    """Fetch a group's (or channel's) title, member count and photo.
+    `link` is a public username or an invite link (t.me/+hash, t.me/joinchat/hash)."""
+    try:
+        chat = await client.get_chat(link)
+    except (UsernameNotOccupied, UsernameInvalid, PeerIdInvalid):
+        return {"error": f"Group {link} not found."}
+    except FloodWait as e:
+        return {"error": f"Telegram rate limit. Retry in {e.value}s."}
+    except Exception as e:
+        logger.error("get_chat failed: %s", e)
+        return {"error": f"Could not open {link}: {e}"}
+
+    # A joined or public chat is a Chat (type is an enum); a group we only have an
+    # invite link for is a ChatPreview (type is a plain string)
+    kind = str(getattr(chat.type, "name", chat.type) or "").lower()
+    if kind in ("private", "bot"):
+        return {"error": f"{link} is a user or bot, not a group."}
+
+    result = {
+        "name": chat.title or link,
+        "members": chat.members_count or 0,
+        "kind": "channel" if kind == "channel" else "group",
+        "pfp": "",
+    }
+
+    # Chat has a ChatPhoto (big_file_id), ChatPreview a Photo (file_id)
+    photo = getattr(chat, "photo", None)
+    file_id = getattr(photo, "big_file_id", None) or getattr(photo, "file_id", None)
+    if file_id:
+        try:
+            photo_file = await client.download_media(file_id, in_memory=True)
+            if photo_file and isinstance(photo_file, io.BytesIO):
+                b64 = base64.b64encode(photo_file.getvalue()).decode("ascii")
+                result["pfp"] = f"data:image/jpeg;base64,{b64}"
+        except Exception as exc:
+            logger.warning("Could not download group photo: %s", exc)
+
+    return result
+
+
 # --- Flask Routes ---------------------------------------------------------
 
 @app.route("/fetch", methods=["POST"])
@@ -171,6 +213,23 @@ def fetch_bot():
 
     try:
         future = asyncio.run_coroutine_threadsafe(_fetch_bot(username), loop)
+        result = future.result(timeout=30)
+        return jsonify(result)
+    except TimeoutError:
+        return jsonify({"error": "Request timed out."}), 504
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/fetch_group", methods=["POST"])
+def fetch_group():
+    data = request.get_json(force=True, silent=True) or {}
+    link = data.get("link", "").strip().lstrip("@")
+    if not link:
+        return jsonify({"error": "No group username or link provided."}), 400
+
+    try:
+        future = asyncio.run_coroutine_threadsafe(_fetch_group(link), loop)
         result = future.result(timeout=30)
         return jsonify(result)
     except TimeoutError:
